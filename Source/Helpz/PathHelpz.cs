@@ -22,6 +22,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace Helpz
@@ -34,6 +35,48 @@ namespace Helpz
             var uri = new UriBuilder(codebase);
             var path = Path.GetFullPath(Uri.UnescapeDataString(uri.Path));
             return Path.GetDirectoryName(path);
+        }
+
+        public static string GetProjectRootPath(Assembly startFromAssembly, string fileOrDirectoryInRoot)
+        {
+            var codeBase = GetCodeBase(startFromAssembly);
+            return GetProjectRootPath(codeBase, fileOrDirectoryInRoot);
+        }
+
+        public static string GetProjectRootPath(string startFromDirectory, string fileOrDirectoryInRoot)
+        {
+            if (!Directory.Exists(startFromDirectory))
+            {
+                throw new ArgumentException($"Could not find a directory here '{startFromDirectory}'");
+            }
+
+            if (Path.IsPathRooted(startFromDirectory))
+            {
+                startFromDirectory = Path.GetFullPath(startFromDirectory);
+            }
+
+            var directory = startFromDirectory;
+            while (true)
+            {
+                var files = Directory.GetFiles(directory).Select(Path.GetFileName);
+                var directories = Directory.GetDirectories(directory);
+
+                if (files.Contains(fileOrDirectoryInRoot) || directories.Contains(fileOrDirectoryInRoot))
+                {
+                    return directory;
+                }
+
+                var directoryInfo = Directory.GetParent(directory);
+                if (directoryInfo == null)
+                {
+                    throw new ArgumentException(string.Format(
+                        "Could not find a parent directory containing file '{0}' starting from '{1}'",
+                        fileOrDirectoryInRoot,
+                        startFromDirectory));
+                }
+
+                directory = directoryInfo.FullName;
+            }
         }
     }
 }
