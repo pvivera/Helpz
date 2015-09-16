@@ -44,7 +44,7 @@ namespace Helpz.Tests
         [Test]
         public void Ping()
         {
-            _sut.ConnectionString.Ping();
+            // Intentionally left blank
         }
     }
 }

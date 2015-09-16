@@ -20,6 +20,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
+using System.Data.SqlClient;
+
 namespace Helpz.MsSql
 {
     public class MsSqlDatabase : IMsSqlDatabase
@@ -37,6 +40,26 @@ namespace Helpz.MsSql
             var masterConnectionString = ConnectionString.NewConnectionString("master");
             masterConnectionString.Execute($"ALTER DATABASE [{ConnectionString.Database}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;");
             masterConnectionString.Execute($"DROP DATABASE [{ConnectionString.Database}];");
+        }
+
+        public void Ping()
+        {
+            ConnectionString.Ping();
+        }
+
+        public T WithConnection<T>(Func<SqlConnection, T> action)
+        {
+            return ConnectionString.WithConnection(action);
+        }
+
+        public void Execute(string sql)
+        {
+            ConnectionString.Execute(sql);
+        }
+
+        public void WithConnection(Action<SqlConnection> action)
+        {
+            ConnectionString.WithConnection(action);
         }
     }
 }

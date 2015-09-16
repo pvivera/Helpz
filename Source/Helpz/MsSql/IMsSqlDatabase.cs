@@ -21,11 +21,16 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Data.SqlClient;
 
 namespace Helpz.MsSql
 {
     public interface IMsSqlDatabase : IDisposable
     {
         ConnectionString ConnectionString { get; }
+        void Ping();
+        T WithConnection<T>(Func<SqlConnection, T> action);
+        void Execute(string sql);
+        void WithConnection(Action<SqlConnection> action);
     }
 }
