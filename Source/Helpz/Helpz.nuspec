@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Helpz</id>
+    <title>Helpz - Test helpers</title>
+    <version>0.0.0</version>
+    <authors>rasmus</authors>
+    <description>A collection of helpers that ease the testing and configuration validation of a project</description>
+    <language>en-US</language>
+    <iconUrl>https://github.com/rasmus/Helpz/blob/master/LICENSE/master/icon-256x256.png</iconUrl>
+    <projectUrl>https://github.com/rasmus/Helpz/</projectUrl>
+    <licenseUrl>https://github.com/rasmus/Helpz/blob/master/LICENSE</licenseUrl>
+    <copyright>Copyright (c) 2015 Rasmus Mikkelsen</copyright>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <tags>mssql test validation integration testing configuration</tags>
+    <releaseNotes>@releaseNotes@</releaseNotes>
+    @dependencies@
+    @references@
+  </metadata>
+  <files>
+  	<file src="bin\Helpz.dll" target="lib\net451" />
+  </files>
+</package>
