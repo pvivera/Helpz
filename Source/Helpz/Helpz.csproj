@@ -51,11 +51,13 @@
     <Compile Include="MsSql\IMsSqlDatabase.cs" />
     <Compile Include="MsSql\MsSqlDatabase.cs" />
     <Compile Include="MsSql\MsSqlHelpz.cs" />
+    <Compile Include="PathHelpz.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Helpz.nuspec" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
