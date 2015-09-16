@@ -27,7 +27,7 @@ namespace Helpz.MsSql
 {
     public static class MsSqlHelpz
     {
-        public static IMsSqlDatabase CreateDatabase(string label)
+        public static IMsSqlDatabase CreateDatabase(string label, bool dropOnDispose = true)
         {
             var connectionString = CreateConnectionString(label);
             var masterConnectionString = connectionString.NewConnectionString("master");
@@ -35,7 +35,7 @@ namespace Helpz.MsSql
             var sql = $"CREATE DATABASE [{connectionString.Database}]";
             masterConnectionString.Execute(sql);
 
-            return new MsSqlDatabase(connectionString);
+            return new MsSqlDatabase(connectionString, dropOnDispose);
         }
 
         public static ConnectionString CreateConnectionString(string label)
@@ -43,9 +43,9 @@ namespace Helpz.MsSql
             var databaseName = $"{label}_{DateTime.Now.ToString("yyyy-MM-dd-HH-mm")}_{Guid.NewGuid().ToString("N")}";
 
             var connectionstringParts = new List<string>
-                {
-                    $"Database={databaseName}",
-                };
+            {
+                $"Database={databaseName}"
+            };
 
             var environmentServer = Environment.GetEnvironmentVariable("HELPZ_MSSQL_SERVER");
             var environmentPassword = Environment.GetEnvironmentVariable("HELPZ_MSSQL_PASS");

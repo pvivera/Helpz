@@ -27,19 +27,24 @@ namespace Helpz.MsSql
 {
     public class MsSqlDatabase : IMsSqlDatabase
     {
-        public MsSqlDatabase(ConnectionString connectionString)
+        public MsSqlDatabase(ConnectionString connectionString, bool dropOnDispose)
         {
             ConnectionString = connectionString;
+            DropOnDispose = dropOnDispose;
             ConnectionString.Ping();
         }
 
         public ConnectionString ConnectionString { get; }
+        public bool DropOnDispose { get; }
 
         public void Dispose()
         {
-            var masterConnectionString = ConnectionString.NewConnectionString("master");
-            masterConnectionString.Execute($"ALTER DATABASE [{ConnectionString.Database}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;");
-            masterConnectionString.Execute($"DROP DATABASE [{ConnectionString.Database}];");
+            if (DropOnDispose)
+            {
+                var masterConnectionString = ConnectionString.NewConnectionString("master");
+                masterConnectionString.Execute($"ALTER DATABASE [{ConnectionString.Database}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;");
+                masterConnectionString.Execute($"DROP DATABASE [{ConnectionString.Database}];");
+            }
         }
 
         public void Ping()
