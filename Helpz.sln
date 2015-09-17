@@ -7,6 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helpz", "Source\Helpz\Helpz
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helpz.Tests", "Source\Helpz.Tests\Helpz.Tests.csproj", "{ADC3FF0E-34EA-4726-BDD2-6FF38BEEF215}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helpz.Web", "Source\Helpz.Web\Helpz.Web.csproj", "{AC8F5080-64FF-4C34-800C-C9F733543205}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{B11BD3B3-8F60-4A40-8C3D-1E7505C4E687}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helpz.Web.Tests", "Source\Helpz.Web.Tests\Helpz.Web.Tests.csproj", "{4D60CBE6-C2E3-4A5D-BB0A-9F8671827BF0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +27,20 @@ Global
 		{ADC3FF0E-34EA-4726-BDD2-6FF38BEEF215}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADC3FF0E-34EA-4726-BDD2-6FF38BEEF215}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ADC3FF0E-34EA-4726-BDD2-6FF38BEEF215}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC8F5080-64FF-4C34-800C-C9F733543205}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC8F5080-64FF-4C34-800C-C9F733543205}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC8F5080-64FF-4C34-800C-C9F733543205}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC8F5080-64FF-4C34-800C-C9F733543205}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D60CBE6-C2E3-4A5D-BB0A-9F8671827BF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D60CBE6-C2E3-4A5D-BB0A-9F8671827BF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D60CBE6-C2E3-4A5D-BB0A-9F8671827BF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D60CBE6-C2E3-4A5D-BB0A-9F8671827BF0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AC8F5080-64FF-4C34-800C-C9F733543205} = {B11BD3B3-8F60-4A40-8C3D-1E7505C4E687}
+		{4D60CBE6-C2E3-4A5D-BB0A-9F8671827BF0} = {B11BD3B3-8F60-4A40-8C3D-1E7505C4E687}
 	EndGlobalSection
 EndGlobal

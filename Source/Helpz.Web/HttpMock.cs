@@ -1,0 +1,119 @@
+﻿// The MIT License (MIT)
+//
+// Copyright (c) 2015 Rasmus Mikkelsen
+// https://github.com/rasmus/Helpz
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Microsoft.Owin;
+using Microsoft.Owin.Hosting;
+using Owin;
+
+namespace Helpz.Web
+{
+    public class HttpMock : IHttpMock
+    {
+        private readonly List<MockEndpoint> _mockEndpoints = new List<MockEndpoint>();
+        private readonly IDisposable _webApp;
+
+        public HttpMock()
+        {
+            // TODO: Get free TCP port
+            Uri = new Uri("http://localhost:8080");
+
+            _webApp = WebApp.Start(Uri.ToString(), app => { app.Use(Handler); });
+        }
+
+        public Uri Uri { get; }
+
+        public void Mock(HttpMethod httpMethod, string path, Func<IOwinContext, Task> action)
+        {
+            _mockEndpoints.Add(new MockEndpoint(httpMethod, path, action));
+        }
+
+        public void Mock(HttpMethod httpMethod, string path, HttpStatusCode httpStatusCode)
+        {
+            _mockEndpoints.Add(new MockEndpoint(httpMethod, path, c =>
+            {
+                c.Response.StatusCode = (int) httpStatusCode;
+                return Task.FromResult(0);
+            }));
+        }
+
+        public void Mock(HttpMethod httpMethod, string path, string response)
+        {
+            _mockEndpoints.Add(new MockEndpoint(httpMethod, path, async c =>
+            {
+                c.Response.StatusCode = (int) HttpStatusCode.OK;
+                await c.Response.WriteAsync(response).ConfigureAwait(false);
+            }));
+        }
+
+        public void Dispose()
+        {
+            _webApp.Dispose();
+        }
+
+        private async Task Handler(IOwinContext owinContext, Func<Task> func)
+        {
+            var httpMethod = new HttpMethod(owinContext.Request.Method);
+            var validMockEndpoints = _mockEndpoints
+                .Where(m => m.HttpMethod == httpMethod && m.PathRegex.IsMatch(owinContext.Request.Uri.AbsolutePath))
+                .ToList();
+            if (!validMockEndpoints.Any())
+            {
+                owinContext.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+                await owinContext.Response.WriteAsync($"No handler for path '{owinContext.Request.Uri.AbsolutePath}'").ConfigureAwait(false);
+                return;
+            }
+            if (validMockEndpoints.Count > 1)
+            {
+                owinContext.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+                await owinContext.Response.WriteAsync($"More than one handler for path '{owinContext.Request.Uri.AbsolutePath}'").ConfigureAwait(false);
+                return;
+            }
+
+            var mockEndpoint = validMockEndpoints.Single();
+            await mockEndpoint.Handler(owinContext).ConfigureAwait(false);
+        }
+
+        private class MockEndpoint
+        {
+            public MockEndpoint(
+                HttpMethod httpMethod,
+                string path,
+                Func<IOwinContext, Task> handler)
+            {
+                HttpMethod = httpMethod;
+                Handler = handler;
+                PathRegex = new Regex(path, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            }
+
+            public HttpMethod HttpMethod { get; }
+            public Regex PathRegex { get; }
+            public Func<IOwinContext, Task> Handler { get; }
+        }
+    }
+}
