@@ -27,7 +27,7 @@ namespace Helpz.MsSql
 {
     public interface IMsSqlDatabase : IDisposable
     {
-        ConnectionString ConnectionString { get; }
+        MsSqlConnectionString ConnectionString { get; }
         bool DropOnDispose { get; }
         void Ping();
         T WithConnection<T>(Func<SqlConnection, T> action);

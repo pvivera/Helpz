@@ -27,14 +27,14 @@ namespace Helpz.MsSql
 {
     public class MsSqlDatabase : IMsSqlDatabase
     {
-        public MsSqlDatabase(ConnectionString connectionString, bool dropOnDispose)
+        public MsSqlDatabase(MsSqlConnectionString connectionString, bool dropOnDispose)
         {
             ConnectionString = connectionString;
             DropOnDispose = dropOnDispose;
             ConnectionString.Ping();
         }
 
-        public ConnectionString ConnectionString { get; }
+        public MsSqlConnectionString ConnectionString { get; }
         public bool DropOnDispose { get; }
 
         public void Dispose()

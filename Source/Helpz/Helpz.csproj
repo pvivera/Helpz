@@ -47,7 +47,7 @@
     </Compile>
     <Compile Include="Core\SingleValueObject.cs" />
     <Compile Include="Core\ValueObject.cs" />
-    <Compile Include="MsSql\ConnectionString.cs" />
+    <Compile Include="MsSql\MsSqlConnectionString.cs" />
     <Compile Include="MsSql\IMsSqlDatabase.cs" />
     <Compile Include="MsSql\MsSqlDatabase.cs" />
     <Compile Include="MsSql\MsSqlHelpz.cs" />
