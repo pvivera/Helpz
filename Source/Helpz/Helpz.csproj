@@ -54,6 +54,7 @@
     <Compile Include="MsSql\MsSqlHelpz.cs" />
     <Compile Include="NuGetPackages\NuGetPackageReportExtensions.cs" />
     <Compile Include="NuGetPackages\VisualStudioProjectExtensions.cs" />
+    <Compile Include="TcpHelpz.cs" />
     <Compile Include="ValueObjects\NuGetPackageReport.cs" />
     <Compile Include="PathHelpz.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

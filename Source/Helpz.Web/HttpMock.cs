@@ -40,8 +40,8 @@ namespace Helpz.Web
 
         public HttpMock()
         {
-            // TODO: Get free TCP port
-            Uri = new Uri("http://localhost:8080");
+            var port = TcpHelpz.GetFreePort();
+            Uri = new Uri($"http://localhost:{port}");
 
             _webApp = WebApp.Start(Uri.ToString(), app => { app.Use(Handler); });
         }
