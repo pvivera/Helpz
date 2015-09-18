@@ -47,7 +47,7 @@ namespace Helpz.Web.Tests
         }
 
         [Test]
-        public async Task CanReceiveCorrectResponse()
+        public async Task MockResponseString()
         {
             // Arrange
             const string expectedResponse = "good response";
@@ -56,6 +56,20 @@ namespace Helpz.Web.Tests
 
             // Act
             var response = await GetAsync("/endpoint/2").ConfigureAwait(false);
+
+            // Assert
+            response.Should().Be(expectedResponse);
+        }
+
+        [Test]
+        public async Task MockResponse()
+        {
+            // Arrange
+            const string expectedResponse = "good response";
+            _httpMock.Mock(HttpMethod.Get, "/endpoint", r => new MockResponse(expectedResponse));
+
+            // Act
+            var response = await GetAsync("/endpoint").ConfigureAwait(false);
 
             // Assert
             response.Should().Be(expectedResponse);

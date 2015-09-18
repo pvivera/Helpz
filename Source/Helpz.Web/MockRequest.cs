@@ -21,18 +21,31 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Net;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
-using System.Threading.Tasks;
-using Microsoft.Owin;
 
 namespace Helpz.Web
 {
-    public interface IHttpMock : IDisposable
+    public class MockRequest
     {
-        void Mock(HttpMethod httpMethod, string path, Func<IOwinContext, Task> handler);
-        void Mock(HttpMethod httpMethod, string path, HttpStatusCode httpStatusCode);
-        void Mock(HttpMethod httpMethod, string path, string response);
-        void Mock(HttpMethod httpMethod, string path, Func<MockRequest, MockResponse> action);
+        public Uri Uri { get; }
+        public HttpMethod HttpMethod { get; }
+        public string Content { get; }
+        public IReadOnlyDictionary<string, IReadOnlyCollection<string>> Headers { get; }
+
+        public MockRequest(
+            Uri uri,
+            HttpMethod httpMethod,
+            string content,
+            IEnumerable<KeyValuePair<string, string[]>> headers)
+        {
+            Uri = uri;
+            HttpMethod = httpMethod;
+            Content = content ?? string.Empty;
+            Headers = headers.ToDictionary(
+                kv => kv.Key,
+                kv => (IReadOnlyCollection<string>) kv.Value.ToList());
+        }
     }
 }

@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -48,9 +49,9 @@ namespace Helpz.Web
 
         public Uri Uri { get; }
 
-        public void Mock(HttpMethod httpMethod, string path, Func<IOwinContext, Task> action)
+        public void Mock(HttpMethod httpMethod, string path, Func<IOwinContext, Task> handler)
         {
-            _mockEndpoints.Add(new MockEndpoint(httpMethod, path, action));
+            _mockEndpoints.Add(new MockEndpoint(httpMethod, path, handler));
         }
 
         public void Mock(HttpMethod httpMethod, string path, HttpStatusCode httpStatusCode)
@@ -74,6 +75,26 @@ namespace Helpz.Web
         public void Dispose()
         {
             _webApp.Dispose();
+        }
+
+        public void Mock(HttpMethod httpMethod, string path, Func<MockRequest, MockResponse> action)
+        {
+            _mockEndpoints.Add(new MockEndpoint(httpMethod, path, async c =>
+            {
+                string content;
+                using (var streamReader = new StreamReader(c.Request.Body))
+                {
+                    content = await streamReader.ReadToEndAsync().ConfigureAwait(false);
+                }
+                var mockRequest = new MockRequest(
+                    c.Request.Uri,
+                    new HttpMethod(c.Request.Method),
+                    content,
+                    c.Request.Headers);
+                var mockResponse = action(mockRequest);
+                c.Response.StatusCode = (int) mockResponse.HttpStatusCode;
+                await c.Response.WriteAsync(mockResponse.Content).ConfigureAwait(false);
+            }));
         }
 
         private async Task Handler(IOwinContext owinContext, Func<Task> func)
