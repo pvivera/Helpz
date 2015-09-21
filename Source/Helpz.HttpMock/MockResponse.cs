@@ -26,9 +26,6 @@ namespace Helpz.HttpMock
 {
     public class MockResponse
     {
-        public HttpStatusCode HttpStatusCode { get; }
-        public string Content { get; }
-
         public MockResponse(
             string content)
             : this(HttpStatusCode.OK, content)
@@ -42,5 +39,8 @@ namespace Helpz.HttpMock
             HttpStatusCode = httpStatusCode;
             Content = content;
         }
+
+        public HttpStatusCode HttpStatusCode { get; }
+        public string Content { get; }
     }
 }

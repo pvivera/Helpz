@@ -29,11 +29,6 @@ namespace Helpz.HttpMock
 {
     public class MockRequest
     {
-        public Uri Uri { get; }
-        public HttpMethod HttpMethod { get; }
-        public string Content { get; }
-        public IReadOnlyDictionary<string, IReadOnlyCollection<string>> Headers { get; }
-
         public MockRequest(
             Uri uri,
             HttpMethod httpMethod,
@@ -47,5 +42,10 @@ namespace Helpz.HttpMock
                 kv => kv.Key,
                 kv => (IReadOnlyCollection<string>) kv.Value.ToList());
         }
+
+        public Uri Uri { get; }
+        public HttpMethod HttpMethod { get; }
+        public string Content { get; }
+        public IReadOnlyDictionary<string, IReadOnlyCollection<string>> Headers { get; }
     }
 }
