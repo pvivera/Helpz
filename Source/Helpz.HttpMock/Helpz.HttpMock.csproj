@@ -67,6 +67,7 @@
     <Compile Include="HttpMockHelpz.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Helpz.HttpMock.nuspec" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
