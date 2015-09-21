@@ -7,8 +7,8 @@
     <ProjectGuid>{AC8F5080-64FF-4C34-800C-C9F733543205}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Helpz.Web</RootNamespace>
-    <AssemblyName>Helpz.Web</AssemblyName>
+    <RootNamespace>Helpz.HttpMock</RootNamespace>
+    <AssemblyName>Helpz.HttpMock</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -64,7 +64,7 @@
     <Compile Include="MockRequest.cs" />
     <Compile Include="MockResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WebHelpz.cs" />
+    <Compile Include="HttpMockHelpz.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

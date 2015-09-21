@@ -7,8 +7,8 @@
     <ProjectGuid>{4D60CBE6-C2E3-4A5D-BB0A-9F8671827BF0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Helpz.Web.Tests</RootNamespace>
-    <AssemblyName>Helpz.Web.Tests</AssemblyName>
+    <RootNamespace>Helpz.HttpMock.Tests</RootNamespace>
+    <AssemblyName>Helpz.HttpMock.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -72,9 +72,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Helpz.Web\Helpz.Web.csproj">
+    <ProjectReference Include="..\Helpz.HttpMock\Helpz.HttpMock.csproj">
       <Project>{ac8f5080-64ff-4c34-800c-c9f733543205}</Project>
-      <Name>Helpz.Web</Name>
+      <Name>Helpz.HttpMock</Name>
     </ProjectReference>
     <ProjectReference Include="..\Helpz\Helpz.csproj">
       <Project>{37648e89-cdb4-445d-aa09-592e4c052514}</Project>

@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Helpz.Web.Tests
+namespace Helpz.HttpMock.Tests
 {
     public class HttpMockTests
     {

@@ -20,13 +20,19 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-namespace Helpz.Web
+using System;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.Owin;
+
+namespace Helpz.HttpMock
 {
-    public static class WebHelpz
+    public interface IHttpMock : IDisposable
     {
-        public static IHttpMock CreateHttpMock()
-        {
-            return new HttpMock();
-        }
+        void Mock(HttpMethod httpMethod, string path, Func<IOwinContext, Task> handler);
+        void Mock(HttpMethod httpMethod, string path, HttpStatusCode httpStatusCode);
+        void Mock(HttpMethod httpMethod, string path, string response);
+        void Mock(HttpMethod httpMethod, string path, Func<MockRequest, MockResponse> action);
     }
 }

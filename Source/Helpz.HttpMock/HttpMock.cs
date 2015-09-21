@@ -32,7 +32,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Hosting;
 using Owin;
 
-namespace Helpz.Web
+namespace Helpz.HttpMock
 {
     public class HttpMock : IHttpMock
     {
