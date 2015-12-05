@@ -20,13 +20,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System.Net;
+
 namespace Helpz.HttpMock
 {
     public static class HttpMockHelpz
     {
-        public static IHttpMock CreateHttpMock()
+        public static IHttpMock CreateHttpMock(
+            HttpStatusCode defaultHttpStatusCode = HttpStatusCode.NotImplemented)
         {
-            return new HttpMock();
+            return new HttpMock(defaultHttpStatusCode);
         }
     }
 }

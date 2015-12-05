@@ -38,12 +38,14 @@ namespace Helpz.HttpMock
     {
         private readonly List<MockEndpoint> _mockEndpoints = new List<MockEndpoint>();
         private readonly IDisposable _webApp;
+        private readonly HttpStatusCode _defaultHttpStatusCode;
 
-        internal HttpMock()
+        internal HttpMock(HttpStatusCode defaultHttpStatusCode)
         {
             var port = TcpHelpz.GetFreePort();
-            Uri = new Uri($"http://localhost:{port}");
 
+            Uri = new Uri($"http://localhost:{port}");
+            _defaultHttpStatusCode = defaultHttpStatusCode;
             _webApp = WebApp.Start(Uri.ToString(), app => { app.Use(Handler); });
         }
 
@@ -105,7 +107,7 @@ namespace Helpz.HttpMock
                 .ToList();
             if (!validMockEndpoints.Any())
             {
-                owinContext.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+                owinContext.Response.StatusCode = (int) _defaultHttpStatusCode;
                 await owinContext.Response.WriteAsync($"No handler for path '{owinContext.Request.Uri.AbsolutePath}'").ConfigureAwait(false);
                 return;
             }
