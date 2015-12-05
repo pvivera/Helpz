@@ -34,5 +34,6 @@ namespace Helpz.HttpMock
         void Mock(HttpMethod httpMethod, string path, HttpStatusCode httpStatusCode);
         void Mock(HttpMethod httpMethod, string path, string response);
         void Mock(HttpMethod httpMethod, string path, Func<MockRequest, MockResponse> action);
+        Uri Uri { get; }
     }
 }

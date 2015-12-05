@@ -39,7 +39,7 @@ namespace Helpz.HttpMock
         private readonly List<MockEndpoint> _mockEndpoints = new List<MockEndpoint>();
         private readonly IDisposable _webApp;
 
-        public HttpMock()
+        internal HttpMock()
         {
             var port = TcpHelpz.GetFreePort();
             Uri = new Uri($"http://localhost:{port}");
@@ -57,19 +57,19 @@ namespace Helpz.HttpMock
         public void Mock(HttpMethod httpMethod, string path, HttpStatusCode httpStatusCode)
         {
             _mockEndpoints.Add(new MockEndpoint(httpMethod, path, c =>
-            {
-                c.Response.StatusCode = (int) httpStatusCode;
-                return Task.FromResult(0);
-            }));
+                {
+                    c.Response.StatusCode = (int) httpStatusCode;
+                    return Task.FromResult(0);
+                }));
         }
 
         public void Mock(HttpMethod httpMethod, string path, string response)
         {
             _mockEndpoints.Add(new MockEndpoint(httpMethod, path, async c =>
-            {
-                c.Response.StatusCode = (int) HttpStatusCode.OK;
-                await c.Response.WriteAsync(response).ConfigureAwait(false);
-            }));
+                {
+                    c.Response.StatusCode = (int) HttpStatusCode.OK;
+                    await c.Response.WriteAsync(response).ConfigureAwait(false);
+                }));
         }
 
         public void Dispose()
@@ -117,7 +117,17 @@ namespace Helpz.HttpMock
             }
 
             var mockEndpoint = validMockEndpoints.Single();
-            await mockEndpoint.Handler(owinContext).ConfigureAwait(false);
+
+            try
+            {
+                await mockEndpoint.Handler(owinContext).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                var response = $"Failed to invoke handler {mockEndpoint.HttpMethod} {mockEndpoint.PathRegex} {Environment.NewLine} {e}";
+                owinContext.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+                await owinContext.Response.WriteAsync(response).ConfigureAwait(false);
+            }
         }
 
         private class MockEndpoint

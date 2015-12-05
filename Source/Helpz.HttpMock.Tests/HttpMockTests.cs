@@ -32,12 +32,12 @@ namespace Helpz.HttpMock.Tests
     public class HttpMockTests
     {
         private static readonly HttpClient HttpClient = new HttpClient();
-        private HttpMock _httpMock;
+        private IHttpMock _httpMock;
 
         [SetUp]
         public void SetUp()
         {
-            _httpMock = new HttpMock();
+            _httpMock = HttpMockHelpz.CreateHttpMock();
         }
 
         [TearDown]
@@ -55,7 +55,7 @@ namespace Helpz.HttpMock.Tests
             _httpMock.Mock(HttpMethod.Get, "/endpoint/2", expectedResponse);
 
             // Act
-            var response = await GetAsync("/endpoint/2").ConfigureAwait(false);
+            var response = await GetAsStringAsync("/endpoint/2").ConfigureAwait(false);
 
             // Assert
             response.Should().Be(expectedResponse);
@@ -69,19 +69,43 @@ namespace Helpz.HttpMock.Tests
             _httpMock.Mock(HttpMethod.Get, "/endpoint", r => new MockResponse(expectedResponse));
 
             // Act
-            var response = await GetAsync("/endpoint").ConfigureAwait(false);
+            var response = await GetAsStringAsync("/endpoint").ConfigureAwait(false);
 
             // Assert
             response.Should().Be(expectedResponse);
         }
 
-        private async Task<string> GetAsync(string path)
+        [Test]
+        public async Task ThrownExceptionIsHandled()
         {
-            var mockUri = new Uri(_httpMock.Uri, path);
-            using (var httpResponseMessage = await HttpClient.GetAsync(mockUri).ConfigureAwait(false))
+            // Arrange
+            _httpMock.Mock(HttpMethod.Get, "/endpoint", r =>
+                {
+                    if (r != null) throw new Exception();
+                    return MockResponse();
+                });
+
+            // Act
+            var response = await GetAsync("/endpoint").ConfigureAwait(false);
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+            content.Should().Contain("Failed to invoke handler");
+        }
+
+        private async Task<string> GetAsStringAsync(string path)
+        {
+            using (var httpResponseMessage = await GetAsync(path).ConfigureAwait(false))
             {
                 return await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
             }
+        }
+
+        private Task<HttpResponseMessage> GetAsync(string path)
+        {
+            var mockUri = new Uri(_httpMock.Uri, path);
+            return HttpClient.GetAsync(mockUri);
         }
     }
 }
