@@ -16,6 +16,7 @@ let dirReports = "./Build/Reports"
 let filePathUnitTestReport = dirReports + "/NUnit.xml"
 let fileListUnitTests = !! ("**/bin/" @@ buildMode @@ "/Helpz*Tests.dll")
 let toolNUnit = "./Tools/NUnit.Runners/tools"
+let toolIlMerge = "./Tools/ilmerge/tools/ILMerge.exe"
 let nugetVersion = buildVersion // + "-alpha"
 let nugetVersionDep = "["+nugetVersion+"]"
 
@@ -61,6 +62,26 @@ Target "CreatePackageHelpz" (fun _ ->
             "Source/Helpz/Helpz.nuspec"
     )
 
+Target "CreatePackageHelpzHttpMock" (fun _ ->
+    let binDir = "Source\\Helpz.HttpMock\\bin\\" + buildMode + "\\"
+    let result = ExecProcess (fun info ->
+       info.Arguments <- "/targetplatform:v4 /internalize /allowDup /target:library /out:Source\\Helpz.HttpMock\\bin\\Helpz.HttpMock.dll " + binDir + "Helpz.HttpMock.dll " + binDir + "Microsoft.Owin.Host.HttpListener.dll " + binDir + "Microsoft.Owin.Hosting.dll"
+       info.FileName <- toolIlMerge) (TimeSpan.FromMinutes 5.0)
+    if result <> 0 then failwithf "ILMerge of Helpz.HttpMock returned with a non-zero exit code"
+    NuGet (fun p -> 
+        {p with
+            OutputPath = dirPackages
+            WorkingDir = "Source/Helpz.HttpMock"
+            Version = nugetVersion
+            ReleaseNotes = toLines releaseNotes.Notes
+            Dependencies = [
+                "Owin",  GetPackageVersion "./packages/" "Owin"
+                "Microsoft.Owin",  GetPackageVersion "./packages/" "Microsoft.Owin"
+                ]
+            Publish = false })
+            "Source/Helpz.HttpMock/Helpz.HttpMock.nuspec"
+    )
+
 Target "Default" DoNothing
 
 "Clean"
@@ -68,6 +89,7 @@ Target "Default" DoNothing
     ==> "BuildApp"
     ==> "UnitTest"
     ==> "CreatePackageHelpz"
+    ==> "CreatePackageHelpzHttpMock"
     ==> "Default"
 
 RunTargetOrDefault "Default"
