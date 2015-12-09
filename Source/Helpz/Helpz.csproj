@@ -45,6 +45,9 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="Applications\ConfigHelpz.cs" />
+    <Compile Include="Applications\IApplication.cs" />
+    <Compile Include="Core\FileBackup.cs" />
     <Compile Include="Core\SingleValueObject.cs" />
     <Compile Include="Core\ValueObject.cs" />
     <Compile Include="Extensions\NuGetProjectExtensions.cs" />
@@ -54,6 +57,8 @@
     <Compile Include="MsSql\MsSqlHelpz.cs" />
     <Compile Include="NuGetPackages\NuGetPackageReportExtensions.cs" />
     <Compile Include="NuGetPackages\VisualStudioProjectExtensions.cs" />
+    <Compile Include="Applications\ApplicationDescription.cs" />
+    <Compile Include="Applications\ApplicationHelpz.cs" />
     <Compile Include="TcpHelpz.cs" />
     <Compile Include="ValueObjects\NuGetPackageReport.cs" />
     <Compile Include="PathHelpz.cs" />

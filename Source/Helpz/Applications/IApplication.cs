@@ -20,27 +20,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.Linq;
-using FluentAssertions;
-using Helpz.VisualStudioProjects;
-using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 
-namespace Helpz.Tests
+namespace Helpz.Applications
 {
-    public class VisualStudioProjectTests
+    public interface IApplication : IDisposable
     {
-        [Test]
-        public void FindVisualStudioProjects()
-        {
-            // Act
-            var visualStudioProjects = VisualStudioProjectHelpz.FindVisualStudioProjects(
-                typeof (VisualStudioProjectTests).Assembly,
-                "README.md")
-                .ToList();
-
-            // Assert
-            visualStudioProjects.Should().Contain(p => p.Name == "Helpz");
-            visualStudioProjects.Should().Contain(p => p.Name == "Helpz.Tests");
-        }
+        string Name { get; }
+        int? ExitCode { get; }
+        IReadOnlyCollection<string> StandardOutput { get; }
+        IReadOnlyCollection<string> StandardError { get; }
     }
 }
