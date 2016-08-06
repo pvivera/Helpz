@@ -21,5 +21,18 @@ namespace Helpz.SQLite.Tests
                 .Should()
                 .BeTrue();
         }
+
+        [Test]
+        public void CreatesWorkingDatabases()
+        {
+            // Arrange
+            var sut = SQLiteHelpz.CreateDatabase("test");
+
+            // Act
+            Action act = () => sut.Execute("CREATE TABLE [test] ([Id] [INTEGER] PRIMARY KEY ASC)");
+
+            // Assert
+            act.ShouldNotThrow<Exception>();
+        }
     }
 }
