@@ -48,6 +48,7 @@
     <Compile Include="Core\SingleValueObject.cs" />
     <Compile Include="Core\ValueObject.cs" />
     <Compile Include="Extensions\NuGetProjectExtensions.cs" />
+    <Compile Include="TempFileHelpz.cs" />
     <Compile Include="MsSql\MsSqlConnectionString.cs" />
     <Compile Include="MsSql\IMsSqlDatabase.cs" />
     <Compile Include="MsSql\MsSqlDatabase.cs" />
