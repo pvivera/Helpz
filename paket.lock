@@ -1,0 +1,23 @@
+REDIRECTS: ON
+FRAMEWORK: NET451
+NUGET
+  remote: https://www.nuget.org/api/v2
+    FluentAssertions (4.13)
+    Microsoft.Owin (3.0.1)
+      Owin (>= 1.0)
+    Microsoft.Owin.Host.HttpListener (3.0.1)
+    Microsoft.Owin.Hosting (3.0.1)
+      Microsoft.Owin (>= 3.0.1)
+      Owin (>= 1.0)
+    NuGet.CommandLine (3.4.3)
+    NUnit (2.6.4)
+    Owin (1.0)
+
+GROUP Build
+REDIRECTS: ON
+FRAMEWORK: NET451
+NUGET
+  remote: https://www.nuget.org/api/v2
+    FAKE.Core (4.36)
+    ilmerge (2.14.1208)
+    NUnit.Runners (2.6.4)
