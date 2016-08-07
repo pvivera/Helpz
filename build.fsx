@@ -15,8 +15,8 @@ let dirPackages = "./Build/Packages"
 let dirReports = "./Build/Reports"
 let filePathUnitTestReport = dirReports + "/NUnit.xml"
 let fileListUnitTests = !! ("**/bin/" @@ buildMode @@ "/Helpz*Tests.dll")
-let toolNUnit = "./Tools/NUnit.Runners/tools"
-let toolIlMerge = "./Tools/ilmerge/tools/ILMerge.exe"
+let toolNUnit = "./packages/Build/NUnit.Runners/tools"
+let toolIlMerge = "./packages/Build/ilmerge/tools/ILMerge.exe"
 let nugetVersion = buildVersion // + "-alpha"
 let nugetVersionDep = "["+nugetVersion+"]"
 
