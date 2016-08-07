@@ -82,6 +82,19 @@ Target "CreatePackageHelpzHttpMock" (fun _ ->
             "Source/Helpz.HttpMock/Helpz.HttpMock.nuspec"
     )
 
+Target "CreatePackageHelpzSQLite" (fun _ ->
+    let binDir = "Source/Helpz.SQLite/bin/"
+    CopyFile binDir (binDir + buildMode + "/Helpz.SQLite.dll")
+    NuGet (fun p ->
+        {p with
+            OutputPath = dirPackages
+            WorkingDir = "Source/Helpz.SQLite"
+            Version = nugetVersion
+            ReleaseNotes = toLines releaseNotes.Notes
+            Publish = false })
+            "Source/Helpz.SQLite/Helpz.SQLite.nuspec"
+    )
+
 Target "Default" DoNothing
 
 "Clean"
@@ -90,6 +103,7 @@ Target "Default" DoNothing
     ==> "UnitTest"
     ==> "CreatePackageHelpz"
     ==> "CreatePackageHelpzHttpMock"
+    ==> "CreatePackageHelpzSQLite"
     ==> "Default"
 
 RunTargetOrDefault "Default"

@@ -10,6 +10,8 @@
 * New: Generate a NuGet package report across all Visual Studio projects
   enabling you to e.g. test if two different versions of the same package is
   used
+* New: Added `Helpz.SQLite` with helpers to create conenction strings 
+  and SQLite databases.  
 
 ### New in 0.1.8 (released 2015-09-16)
 
