@@ -62,11 +62,11 @@ namespace Helpz.HttpMock.Tests
         }
 
         [Test]
-        public async Task MockResponse()
+        public async Task ContentResponse()
         {
             // Arrange
             const string expectedResponse = "good response";
-            _httpMock.Mock(HttpMethod.Get, "/endpoint", r => new MockResponse(expectedResponse));
+            _httpMock.Mock(HttpMethod.Get, "/endpoint", r => Response.Create(expectedResponse));
 
             // Act
             var response = await GetAsStringAsync("/endpoint").ConfigureAwait(false);
@@ -76,13 +76,27 @@ namespace Helpz.HttpMock.Tests
         }
 
         [Test]
+        public async Task StatucCodeResponse()
+        {
+            // Arrange
+            const HttpStatusCode expectedHttpStatusCode = HttpStatusCode.Conflict;
+            _httpMock.Mock(HttpMethod.Get, "/endpoint", r => Response.Create(expectedHttpStatusCode));
+
+            // Act
+            var response = await GetAsync("/endpoint").ConfigureAwait(false);
+
+            // Assert
+            response.StatusCode.Should().Be(expectedHttpStatusCode);
+        }
+
+        [Test]
         public async Task ThrownExceptionIsHandled()
         {
             // Arrange
             _httpMock.Mock(HttpMethod.Get, "/endpoint", r =>
                 {
                     if (r != null) throw new Exception();
-                    return MockResponse();
+                    return Response.Create(string.Empty);
                 });
 
             // Act
