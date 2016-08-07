@@ -1,4 +1,4 @@
-#r @"tools\FAKE.Core\tools\FakeLib.dll"
+#r @"packages\Build\FAKE.Core\tools\FakeLib.dll"
 open System
 open Fake 
 open Fake.AssemblyInfoFile
@@ -15,7 +15,7 @@ let dirPackages = "./Build/Packages"
 let dirReports = "./Build/Reports"
 let filePathUnitTestReport = dirReports + "/NUnit.xml"
 let fileListUnitTests = !! ("**/bin/" @@ buildMode @@ "/Helpz*Tests.dll")
-let toolNUnit = "./packages/Build/NUnit.Runners/tools"
+let toolNUnit = "./packages/build/NUnit.Runners/tools"
 let toolIlMerge = "./packages/Build/ilmerge/tools/ILMerge.exe"
 let nugetVersion = buildVersion // + "-alpha"
 let nugetVersionDep = "["+nugetVersion+"]"
@@ -43,7 +43,7 @@ Target "UnitTest" (fun _ ->
             {p with
                 DisableShadowCopy = true;
                 Framework = "net-4.0";
-                ToolPath = "./Tools/NUnit.Runners/tools";
+                ToolPath = toolNUnit;
                 TimeOut = TimeSpan.FromMinutes 30.0;
                 ToolName = "nunit-console-x86.exe";
                 OutputFile = filePathUnitTestReport})

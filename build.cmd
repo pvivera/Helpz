@@ -1,6 +1,7 @@
 rem @echo off
 
-".paket\paket.bootstrapper.exe" restore
+".paket\paket.bootstrapper.exe"
+".paket\paket.exe" restore
 
 "packages\Build\FAKE.Core\tools\Fake.exe" "build.fsx" "nugetApikey=%NUGET_APIKEY%" "buildVersion=%APPVEYOR_BUILD_VERSION%"
 

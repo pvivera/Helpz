@@ -17,4 +17,4 @@ group Build
 
 	nuget FAKE.Core
 	nuget ilmerge
-	nuget NUnit.Runners ~> 3.0
+	nuget NUnit.Runners ~> 2.0
