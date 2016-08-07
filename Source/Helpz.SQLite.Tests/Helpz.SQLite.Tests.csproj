@@ -64,9 +64,6 @@
     <Compile Include="SQLiteHelpzTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Helpz.SQLite\Helpz.SQLite.csproj">
       <Project>{f82e6ef0-cda8-4b9c-880e-3f0c6fef7fd0}</Project>
       <Name>Helpz.SQLite</Name>
