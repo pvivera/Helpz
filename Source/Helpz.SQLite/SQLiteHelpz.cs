@@ -32,7 +32,7 @@ namespace Helpz.SQLite
         public static string CreateTempConnectionString()
         {
             var tempFilePath = TempFileHelpz.MakeFilePath(SQLiteFileExt);
-            return $"Data Source={tempFilePath};Version=3;";
+            return string.Format(ConnectionStringMask, tempFilePath);
         }
 
         public static SQLiteConnectionString CreateLabeledConnectionString(string label)
