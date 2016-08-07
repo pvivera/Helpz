@@ -185,3 +185,6 @@ FakesAssemblies/
 /Tools
 /Build
 /.fake
+
+# Paket
+.paket/paket.exe
