@@ -47,27 +47,20 @@
     </Compile>
     <Compile Include="Core\SingleValueObject.cs" />
     <Compile Include="Core\ValueObject.cs" />
-    <Compile Include="Extensions\NuGetProjectExtensions.cs" />
     <Compile Include="TempFileHelpz.cs" />
     <Compile Include="MsSql\MsSqlConnectionString.cs" />
     <Compile Include="MsSql\IMsSqlDatabase.cs" />
     <Compile Include="MsSql\MsSqlDatabase.cs" />
     <Compile Include="MsSql\MsSqlHelpz.cs" />
-    <Compile Include="NuGetPackages\NuGetPackageReportExtensions.cs" />
-    <Compile Include="NuGetPackages\VisualStudioProjectExtensions.cs" />
     <Compile Include="TcpHelpz.cs" />
-    <Compile Include="ValueObjects\NuGetPackageReport.cs" />
     <Compile Include="PathHelpz.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ValueObjects\NuGetPackage.cs" />
-    <Compile Include="ValueObjects\PackageVersion.cs" />
     <Compile Include="ValueObjects\VisualStudioProject.cs" />
     <Compile Include="VisualStudioProjects\VisualStudioProjectHelpz.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Helpz.nuspec" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -76,4 +69,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Import Project="..\..\.paket\paket.targets" />
 </Project>

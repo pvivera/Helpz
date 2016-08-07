@@ -22,39 +22,30 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Helpz.Core;
+using System.Linq;
+using System.Net.Http;
 
-namespace Helpz.ValueObjects
+namespace Helpz.HttpMock
 {
-    public class PackageVersion : SingleValueObject<string>
+    public class Request
     {
-        private static readonly Regex VersionParser = new Regex(@"^(?<version>[0-9\.]+)(-(?<pre>.+)){0,1}$");
-
-        public PackageVersion(string value) : base(value)
+        internal Request(
+            Uri uri,
+            HttpMethod httpMethod,
+            string content,
+            IEnumerable<KeyValuePair<string, string[]>> headers)
         {
-            if (string.IsNullOrEmpty(value)) throw new ArgumentNullException(nameof(value));
-
-            var match = VersionParser.Match(value);
-            if (!match.Success)
-            {
-                throw new ArgumentException($"NuGet package version '{value}' is invalid");
-            }
-
-            Version = Version.Parse(match.Groups["version"].Value);
-            Patch = match.Groups["pre"].Success
-                ? match.Groups["pre"].Value
-                : string.Empty;
+            Uri = uri;
+            HttpMethod = httpMethod;
+            Content = content ?? string.Empty;
+            Headers = headers.ToDictionary(
+                kv => kv.Key,
+                kv => (IReadOnlyCollection<string>) kv.Value.ToList());
         }
 
-        public Version Version { get; }
-        public string Patch { get; }
-        public bool IsPrerelease => !string.IsNullOrEmpty(Patch);
-
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Version;
-            yield return Patch;
-        }
+        public Uri Uri { get; }
+        public HttpMethod HttpMethod { get; }
+        public string Content { get; }
+        public IReadOnlyDictionary<string, IReadOnlyCollection<string>> Headers { get; }
     }
 }

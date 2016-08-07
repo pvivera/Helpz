@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Helpz.Core;
 
 namespace Helpz.ValueObjects
@@ -32,20 +31,17 @@ namespace Helpz.ValueObjects
         public VisualStudioProject(
             string directoryPath,
             string filePath,
-            string name,
-            IEnumerable<NuGetPackage> nuGetPackages)
+            string name)
         {
             if (string.IsNullOrEmpty(directoryPath)) throw new ArgumentNullException(nameof(directoryPath));
             if (string.IsNullOrEmpty(filePath)) throw new ArgumentNullException(nameof(filePath));
             if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
 
-            NuGetPackages = (nuGetPackages ?? Enumerable.Empty<NuGetPackage>()).ToDictionary(n => n.Id, n => n);
             DirectoryPath = directoryPath;
             FilePath = filePath;
             Name = name;
         }
 
-        public IReadOnlyDictionary<string, NuGetPackage> NuGetPackages { get; }
         public string DirectoryPath { get; }
         public string FilePath { get; }
         public string Name { get; }
@@ -55,21 +51,6 @@ namespace Helpz.ValueObjects
             yield return DirectoryPath;
             yield return FilePath;
             yield return Name;
-
-            foreach (var nuGetPackage in NuGetPackages)
-            {
-                yield return nuGetPackage;
-            }
-        }
-
-        public PackageVersion GetPackageVersion(string id)
-        {
-            NuGetPackage nuGetPackage;
-            if (!NuGetPackages.TryGetValue(id, out nuGetPackage))
-            {
-                throw new ArgumentException($"Project '{Name}' does not have NuGet package '{id}'");
-            }
-            return nuGetPackage.Version;
         }
 
         public override string ToString()

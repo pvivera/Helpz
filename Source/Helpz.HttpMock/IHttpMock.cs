@@ -30,10 +30,11 @@ namespace Helpz.HttpMock
 {
     public interface IHttpMock : IDisposable
     {
+        Uri Uri { get; }
+
         void Mock(HttpMethod httpMethod, string path, Func<IOwinContext, Task> handler);
         void Mock(HttpMethod httpMethod, string path, HttpStatusCode httpStatusCode);
         void Mock(HttpMethod httpMethod, string path, string response);
-        void Mock(HttpMethod httpMethod, string path, Func<MockRequest, MockResponse> action);
-        Uri Uri { get; }
+        void Mock(HttpMethod httpMethod, string path, Func<Request, Response> action);
     }
 }

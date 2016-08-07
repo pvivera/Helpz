@@ -29,7 +29,7 @@ namespace Helpz.HttpMock
         public static IHttpMock CreateHttpMock(
             HttpStatusCode defaultHttpStatusCode = HttpStatusCode.NotImplemented)
         {
-            return new HttpMock(defaultHttpStatusCode);
+            return new Internals.HttpMock(defaultHttpStatusCode);
         }
     }
 }

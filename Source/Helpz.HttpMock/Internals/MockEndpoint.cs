@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2015 Rasmus Mikkelsen
 // https://github.com/rasmus/Helpz
@@ -21,28 +21,27 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using FluentAssertions;
-using Helpz.ValueObjects;
-using NUnit.Framework;
+using System.Net.Http;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Microsoft.Owin;
 
-namespace Helpz.Tests.ValueObjects
+namespace Helpz.HttpMock.Internals
 {
-    public class PackageVersionTests
+    internal class MockEndpoint
     {
-        [TestCase("1.0", 1, 0, "", false)]
-        [TestCase("0.1", 0, 1, "", false)]
-        [TestCase("1.0-alpha", 1, 0, "alpha", true)]
-        [TestCase("0.42-build.23", 0, 42, "build.23", true)]
-        public void ValidVersions(string version, int expectedMajor, int expectedMinor, string expectedPatch, bool expectedIsPrerelease)
+        public MockEndpoint(
+            HttpMethod httpMethod,
+            string path,
+            Func<IOwinContext, Task> handler)
         {
-            // Act
-            var expectedVersion = new Version(expectedMajor, expectedMinor);
-            var packageVersion = new PackageVersion(version);
-
-            // Assert
-            packageVersion.Version.Should().Be(expectedVersion);
-            packageVersion.Patch.Should().Be(expectedPatch);
-            packageVersion.IsPrerelease.Should().Be(expectedIsPrerelease);
+            HttpMethod = httpMethod;
+            Handler = handler;
+            PathRegex = new Regex(path, RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
+
+        public HttpMethod HttpMethod { get; }
+        public Regex PathRegex { get; }
+        public Func<IOwinContext, Task> Handler { get; }
     }
 }

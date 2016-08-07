@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Xml.Linq;
 using Helpz.ValueObjects;
 
 namespace Helpz.VisualStudioProjects
@@ -59,39 +58,12 @@ namespace Helpz.VisualStudioProjects
                 throw new ArgumentException($"Could not get directory for '{projectFilePath}'");
             }
 
-            var packageFilePath = Path.Combine(directoryPath, "packages.config");
-            var nuGetPackages = File.Exists(packageFilePath)
-                ? LoadPackagesFile(packageFilePath)
-                : Enumerable.Empty<NuGetPackage>();
-
             var projectName = Path.GetFileNameWithoutExtension(projectFilePath);
 
             return new VisualStudioProject(
                 directoryPath,
                 projectFilePath,
-                projectName,
-                nuGetPackages);
-        }
-
-        public static IEnumerable<NuGetPackage> LoadPackagesFile(string packageFilePath)
-        {
-            if (!File.Exists(packageFilePath))
-            {
-                throw new ArgumentException($"Location '{packageFilePath}' does not exists");
-            }
-
-            var xDocument = XDocument.Load(packageFilePath);
-            if (xDocument?.Root == null)
-            {
-                throw new ArgumentException($"Packages file '{packageFilePath}' seems invalid");
-            }
-
-            return xDocument
-                .Root
-                .Descendants("package")
-                .Select(n => new NuGetPackage(
-                    n.Attribute("id").Value,
-                    new PackageVersion(n.Attribute("version").Value)));
+                projectName);
         }
 
         private static IEnumerable<string> FindVisualStudioProjectFiles(string rootFolder)

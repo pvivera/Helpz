@@ -20,32 +20,42 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.Linq;
-using System.Collections.Generic;
-using Helpz.ValueObjects;
-using Helpz.VisualStudioProjects;
+using System.Net;
 
-namespace Helpz.Extensions
+namespace Helpz.HttpMock
 {
-    public static class NuGetProjectExtensions
+    public class Response
     {
-        public static IEnumerable<KeyValuePair<string, IEnumerable<VisualStudioProject>>> SelectVisualStudioProjectsWithDifferentPackageVersions(
-            this IEnumerable<VisualStudioProject> visualStudioProjects)
+        public static Response Create(
+            HttpStatusCode httpStatusCode)
         {
-            return (
-                from vp in visualStudioProjects
-                from np in vp.NuGetPackages.Values
-                let a = new
-                    {
-                        Project = vp,
-                        Package = np,
-                    }
-                group a by a.Package.Id into g
-                where g.GroupBy(a => a.Package.Version).Count() > 1
-                select new KeyValuePair<string, IEnumerable<VisualStudioProject>>(
-                    g.Key,
-                    g.Select(a => a.Project))
-                );
+            return Create(httpStatusCode, null);
         }
+
+        public static Response Create(
+            string content)
+        {
+            return Create(HttpStatusCode.OK, content);
+        }
+
+        public static Response Create(
+            HttpStatusCode httpStatusCode,
+            string content)
+        {
+            return new Response(
+                httpStatusCode,
+                content);
+        }
+
+        private Response(
+            HttpStatusCode httpStatusCode,
+            string content)
+        {
+            HttpStatusCode = httpStatusCode;
+            Content = content ?? string.Empty;
+        }
+
+        public HttpStatusCode HttpStatusCode { get; }
+        public string Content { get; }
     }
 }
