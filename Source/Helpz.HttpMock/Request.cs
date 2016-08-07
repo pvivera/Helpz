@@ -20,27 +20,32 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.Net;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 
 namespace Helpz.HttpMock
 {
-    public class MockResponse
+    public class Request
     {
-        public MockResponse(
-            string content)
-            : this(HttpStatusCode.OK, content)
+        internal Request(
+            Uri uri,
+            HttpMethod httpMethod,
+            string content,
+            IEnumerable<KeyValuePair<string, string[]>> headers)
         {
+            Uri = uri;
+            HttpMethod = httpMethod;
+            Content = content ?? string.Empty;
+            Headers = headers.ToDictionary(
+                kv => kv.Key,
+                kv => (IReadOnlyCollection<string>) kv.Value.ToList());
         }
 
-        public MockResponse(
-            HttpStatusCode httpStatusCode,
-            string content)
-        {
-            HttpStatusCode = httpStatusCode;
-            Content = content;
-        }
-
-        public HttpStatusCode HttpStatusCode { get; }
+        public Uri Uri { get; }
+        public HttpMethod HttpMethod { get; }
         public string Content { get; }
+        public IReadOnlyDictionary<string, IReadOnlyCollection<string>> Headers { get; }
     }
 }

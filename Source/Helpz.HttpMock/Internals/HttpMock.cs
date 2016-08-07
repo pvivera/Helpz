@@ -26,15 +26,14 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Owin;
 using Microsoft.Owin.Hosting;
 using Owin;
 
-namespace Helpz.HttpMock
+namespace Helpz.HttpMock.Internals
 {
-    public class HttpMock : IHttpMock
+    internal class HttpMock : IHttpMock
     {
         private readonly List<MockEndpoint> _mockEndpoints = new List<MockEndpoint>();
         private readonly IDisposable _webApp;
@@ -79,7 +78,7 @@ namespace Helpz.HttpMock
             _webApp.Dispose();
         }
 
-        public void Mock(HttpMethod httpMethod, string path, Func<MockRequest, MockResponse> action)
+        public void Mock(HttpMethod httpMethod, string path, Func<Request, Response> action)
         {
             _mockEndpoints.Add(new MockEndpoint(httpMethod, path, async c =>
             {
@@ -88,7 +87,7 @@ namespace Helpz.HttpMock
                 {
                     content = await streamReader.ReadToEndAsync().ConfigureAwait(false);
                 }
-                var mockRequest = new MockRequest(
+                var mockRequest = new Request(
                     c.Request.Uri,
                     new HttpMethod(c.Request.Method),
                     content,
@@ -130,23 +129,6 @@ namespace Helpz.HttpMock
                 owinContext.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
                 await owinContext.Response.WriteAsync(response).ConfigureAwait(false);
             }
-        }
-
-        private class MockEndpoint
-        {
-            public MockEndpoint(
-                HttpMethod httpMethod,
-                string path,
-                Func<IOwinContext, Task> handler)
-            {
-                HttpMethod = httpMethod;
-                Handler = handler;
-                PathRegex = new Regex(path, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            }
-
-            public HttpMethod HttpMethod { get; }
-            public Regex PathRegex { get; }
-            public Func<IOwinContext, Task> Handler { get; }
         }
     }
 }

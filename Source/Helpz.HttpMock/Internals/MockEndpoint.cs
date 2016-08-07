@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2015 Rasmus Mikkelsen
 // https://github.com/rasmus/Helpz
@@ -21,31 +21,27 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Microsoft.Owin;
 
-namespace Helpz.HttpMock
+namespace Helpz.HttpMock.Internals
 {
-    public class MockRequest
+    internal class MockEndpoint
     {
-        public MockRequest(
-            Uri uri,
+        public MockEndpoint(
             HttpMethod httpMethod,
-            string content,
-            IEnumerable<KeyValuePair<string, string[]>> headers)
+            string path,
+            Func<IOwinContext, Task> handler)
         {
-            Uri = uri;
             HttpMethod = httpMethod;
-            Content = content ?? string.Empty;
-            Headers = headers.ToDictionary(
-                kv => kv.Key,
-                kv => (IReadOnlyCollection<string>) kv.Value.ToList());
+            Handler = handler;
+            PathRegex = new Regex(path, RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
-        public Uri Uri { get; }
         public HttpMethod HttpMethod { get; }
-        public string Content { get; }
-        public IReadOnlyDictionary<string, IReadOnlyCollection<string>> Headers { get; }
+        public Regex PathRegex { get; }
+        public Func<IOwinContext, Task> Handler { get; }
     }
 }
