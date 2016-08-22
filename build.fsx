@@ -76,6 +76,7 @@ Target "CreatePackageHelpzHttpMock" (fun _ ->
             ReleaseNotes = toLines releaseNotes.Notes
             Dependencies = [
                 "Owin",  GetPackageVersion "./packages/" "Owin"
+                "Helpz", nugetVersionDep
                 "Microsoft.Owin",  GetPackageVersion "./packages/" "Microsoft.Owin"
                 ]
             Publish = false })
