@@ -4,7 +4,7 @@
     <id>Helpz.SQLite</id>
     <title>Helpz - SQLite Test helpers</title>
     <version>0.0.0</version>
-    <authors>rasmus</authors>
+    <authors>rasmus,JC008</authors>
     <description>A collection of helpers that ease the testing and configuration validation of a project</description>
     <language>en-US</language>
     <iconUrl>https://raw.githubusercontent.com/rasmus/Helpz/develop/icon-256x256.png</iconUrl>

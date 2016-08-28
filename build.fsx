@@ -91,6 +91,10 @@ Target "CreatePackageHelpzSQLite" (fun _ ->
             WorkingDir = "Source/Helpz.SQLite"
             Version = nugetVersion
             ReleaseNotes = toLines releaseNotes.Notes
+            Dependencies = [
+                "Helpz"
+                "System.Data.SQLite.Core",  GetPackageVersion "./packages/" "System.Data.SQLite.Core"
+            ]            
             Publish = false })
             "Source/Helpz.SQLite/Helpz.SQLite.nuspec"
     )

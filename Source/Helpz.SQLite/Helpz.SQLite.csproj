@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -43,11 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Helpz\Core\SingleValueObject.cs">
-      <Link>Core\SingleValueObject.cs</Link>
-    </Compile>
-    <Compile Include="..\Helpz\Core\ValueObject.cs">
-      <Link>Core\ValueObject.cs</Link>
+    <Compile Include="..\SolutionInfo.cs">
+      <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="ISQLiteDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -57,12 +55,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Helpz.SQLite.nuspec" />
+    <None Include="Helpz.SQLite.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Helpz\Helpz.csproj">
-      <Project>{37648E89-CDB4-445D-AA09-592E4C052514}</Project>
+      <Project>{37648e89-cdb4-445d-aa09-592e4c052514}</Project>
       <Name>Helpz</Name>
     </ProjectReference>
   </ItemGroup>

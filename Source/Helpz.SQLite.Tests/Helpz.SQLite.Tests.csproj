@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -53,7 +54,7 @@
       <Name>Helpz.SQLite</Name>
     </ProjectReference>
     <ProjectReference Include="..\Helpz\Helpz.csproj">
-      <Project>{37648E89-CDB4-445D-AA09-592E4C052514}</Project>
+      <Project>{37648e89-cdb4-445d-aa09-592e4c052514}</Project>
       <Name>Helpz</Name>
     </ProjectReference>
   </ItemGroup>
