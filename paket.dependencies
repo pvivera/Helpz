@@ -13,7 +13,6 @@ nuget System.Data.SQLite.Core ~> 1.0.102
 
 group Build
 	source https://www.nuget.org/api/v2/
-	redirects: on
 	framework: <= net451
 
 	nuget FAKE.Core

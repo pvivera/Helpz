@@ -2,7 +2,7 @@ REDIRECTS: ON
 FRAMEWORK: NET451
 NUGET
   remote: https://www.nuget.org/api/v2
-    FluentAssertions (4.13)
+    FluentAssertions (4.13.1)
     Microsoft.Owin (3.0.1)
       Owin (>= 1.0)
     Microsoft.Owin.Host.HttpListener (3.0.1)
@@ -15,10 +15,9 @@ NUGET
     System.Data.SQLite.Core (1.0.102)
 
 GROUP Build
-REDIRECTS: ON
 FRAMEWORK: NET451
 NUGET
   remote: https://www.nuget.org/api/v2
-    FAKE.Core (4.36)
-    ilmerge (2.14.1208)
+    FAKE.Core (4.39)
+    ILMerge (2.14.1208)
     NUnit.Runners (2.6.4)
