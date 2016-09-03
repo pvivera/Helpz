@@ -4,22 +4,28 @@
 # User-specific files
 *.suo
 *.user
+*.userosscache
 *.sln.docstates
+
+# User-specific files (MonoDevelop/Xamarin Studio)
+*.userprefs
 
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
-x64/
-x86/
-build/
+[Xx]64/
+[Xx]86/
+[Bb]uild/
 bld/
 [Bb]in/
 [Oo]bj/
 
-# Roslyn cache directories
-*.ide/
+# Visual Studio 2015 cache/options directory
+.vs/
+# Uncomment if you have tasks that create the project's static files in wwwroot
+#wwwroot/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -33,6 +39,10 @@ TestResult.xml
 [Dd]ebugPS/
 [Rr]eleasePS/
 dlldata.c
+
+# DNX
+project.lock.json
+artifacts/
 
 *_i.c
 *_p.c
@@ -66,14 +76,17 @@ _Chutzpah*
 ipch/
 *.aps
 *.ncb
+*.opendb
 *.opensdf
 *.sdf
 *.cachefile
+*.VC.db
 
 # Visual Studio profiler
 *.psess
 *.vsp
 *.vspx
+*.sap
 
 # TFS 2012 Local Workspace
 $tf/
@@ -98,6 +111,7 @@ _TeamCity*
 # NCrunch
 _NCrunch_*
 .*crunch*.local.xml
+nCrunchTemp_*
 
 # MightyMoose
 *.mm.*
@@ -139,6 +153,13 @@ csx/
 
 # Windows Store app package directory
 AppPackages/
+BundleArtifacts/
+
+# Visual Studio cache files
+# files ending in .cache can be ignored
+*.[Cc]ache
+# but keep track of directories ending in .cache
+!*.[Cc]ache/
 
 # Others
 sql/

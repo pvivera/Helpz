@@ -12,6 +12,7 @@ NUGET
     NuGet.CommandLine (3.4.3)
     NUnit (2.6.4)
     Owin (1.0)
+    System.Data.SQLite.Core (1.0.102)
 
 GROUP Build
 REDIRECTS: ON
