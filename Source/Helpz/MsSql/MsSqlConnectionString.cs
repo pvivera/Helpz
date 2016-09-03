@@ -29,8 +29,12 @@ namespace Helpz.MsSql
 {
     public class MsSqlConnectionString : SingleValueObject<string>
     {
-        private static readonly Regex DatabaseReplace = new Regex(@"(?<key>Initial Catalog|Database)=[a-zA-Z0-9\-_]+", RegexOptions.Compiled);
-        private static readonly Regex DatabaseExtract = new Regex(@"(Initial Catalog|Database)=(?<database>[a-zA-Z0-9\-_]+)", RegexOptions.Compiled);
+        private static readonly Regex DatabaseReplace = new Regex(
+            @"(?<key>Initial Catalog|Database)=[a-zA-Z0-9\-_]+",
+            RegexOptions.Compiled);
+        private static readonly Regex DatabaseExtract = new Regex(
+            @"(Initial Catalog|Database)=(?<database>[a-zA-Z0-9\-_]+)",
+            RegexOptions.Compiled);
 
         public MsSqlConnectionString(string value) : base(value)
         {
@@ -68,7 +72,7 @@ namespace Helpz.MsSql
 
         public void Execute(string sql)
         {
-            Console.WriteLine("Executing SQL: {0}", sql);
+            Console.WriteLine($"Executing SQL: {sql}");
 
             WithConnection(c =>
             {

@@ -22,17 +22,23 @@
 
 using System;
 using System.Data.SQLite;
-using System.Linq;
-using Helpz.Core;
-using System.Text.RegularExpressions;
 using System.IO;
+using System.Text.RegularExpressions;
+using Helpz.Core;
 
 namespace Helpz.SQLite
 {
     public class SQLiteConnectionString : SingleValueObject<string>
     {
-        private static readonly Regex DatabaseExtract = new Regex(@"(\w+\.(sqlite|db))", RegexOptions.Compiled);
-        private static readonly Regex DatabaseFilenameExtract = new Regex(@"(?:=)(?<filename>.+\.sqlite|db)", RegexOptions.Compiled);
+        private static readonly Regex DatabaseExtract = new Regex(
+            @"(\w+\.(sqlite|db))",
+            RegexOptions.Compiled);
+
+        private static readonly Regex DatabaseFilenameExtract = new Regex(
+            @"(?:=)(?<filename>.+\.sqlite|db)",
+            RegexOptions.Compiled);
+
+        private readonly SQLiteConnection _sqliteConnection;
 
         public SQLiteConnectionString(string value)
             : base(value)
@@ -41,27 +47,25 @@ namespace Helpz.SQLite
 
             var matchName = DatabaseExtract.Match(value);
             if (!matchName.Success)
-            {
                 throw new ArgumentException($"Cannot find database name in '{value}'");
-            }
             DatabaseName = matchName.Value;
 
             var matchPath = DatabaseFilenameExtract.Match(Value);
             if (!matchPath.Success)
-            {
                 throw new ArgumentException($"Cannot find database file path in '{Value}'");
-            }
             DatabaseFilePath = matchPath.Groups["filename"].Value;
 
             var directory = Path.GetDirectoryName(DatabaseFilePath);
             if (!Directory.Exists(directory))
-            {
                 throw new ArgumentException($"File path {directory} does not exist");
-            }
 
             _sqliteConnection = new SQLiteConnection(value);
             _sqliteConnection.Open();
         }
+
+        public string DatabaseFilePath { get; }
+
+        public string DatabaseName { get; }
 
         internal void Close()
         {
@@ -70,7 +74,7 @@ namespace Helpz.SQLite
 
         public void Execute(string sql)
         {
-            Console.WriteLine("Executing SQL: {0}", sql);
+            Console.WriteLine($"Executing SQL: {sql}");
 
             WithConnection(c =>
             {
@@ -103,12 +107,5 @@ namespace Helpz.SQLite
                 return action(sqliteConnection);
             }
         }
-
-        public string DatabaseFilePath { get; }
-
-        public string DatabaseName { get; }
-
-        private SQLiteConnection _sqliteConnection;
     }
-
 }

@@ -21,11 +21,9 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 using System.IO;
-using Helpz;
 
 namespace Helpz.SQLite.Tests
 {

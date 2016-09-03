@@ -23,34 +23,24 @@
 using System;
 using System.Data.SQLite;
 using System.IO;
-using System.Linq;
 
 namespace Helpz.SQLite
 {
     public class SQLiteDatabase : ISQLiteDatabase
     {
-        public SQLiteDatabase(SQLiteConnectionString connectionString, bool dropOnDispose)
+        public SQLiteDatabase(SQLiteConnectionString connectionString, bool dropOnDispose = true)
         {
-           ConnectionString = connectionString;
+            ConnectionString = connectionString;
             DropOnDispose = dropOnDispose;
             ConnectionString.Ping();
         }
 
-        public SQLiteDatabase(SQLiteConnectionString connectionString)
-            : this(connectionString, true)
-        {
-        }
-
         public void Dispose()
         {
-            if (DropOnDispose)
-            {
-                if (File.Exists(ConnectionString.DatabaseFilePath))
-                {
-                    ConnectionString.Close();
-                    File.Delete(ConnectionString.DatabaseFilePath);
-                }
-            }
+            if (!DropOnDispose || !File.Exists(ConnectionString.DatabaseFilePath)) return;
+
+            ConnectionString.Close();
+            File.Delete(ConnectionString.DatabaseFilePath);
         }
 
         public void Execute(string sql)
@@ -76,6 +66,5 @@ namespace Helpz.SQLite
         public SQLiteConnectionString ConnectionString { get; }
 
         public bool DropOnDispose { get; }
-        
     }
 }

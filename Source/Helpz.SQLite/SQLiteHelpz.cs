@@ -20,10 +20,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Helpz;
 using System;
 using System.IO;
-using System.Linq;
 
 namespace Helpz.SQLite
 {
@@ -51,7 +49,7 @@ namespace Helpz.SQLite
             return new SQLiteDatabase(connectionString, dropOnDispose);
         }
 
-        public const string SQLiteFileExt = ".sqlite";
-        public const string ConnectionStringMask = "Data Source={0};Version=3;";
+        public static string SQLiteFileExt { get; } = ".sqlite";
+        public static string ConnectionStringMask { get; } = "Data Source={0};Version=3;";
     }
 }
