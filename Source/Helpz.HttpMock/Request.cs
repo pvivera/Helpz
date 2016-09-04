@@ -21,17 +21,31 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Data.SqlClient;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 
-namespace Helpz.MsSql
+namespace Helpz.HttpMock
 {
-    public interface IMsSqlDatabase : IDisposable
+    public class Request
     {
-        MsSqlConnectionString ConnectionString { get; }
-        bool DropOnDispose { get; }
-        void Ping();
-        T WithConnection<T>(Func<SqlConnection, T> action);
-        void Execute(string sql);
-        void WithConnection(Action<SqlConnection> action);
+        internal Request(
+            Uri uri,
+            HttpMethod httpMethod,
+            string content,
+            IEnumerable<KeyValuePair<string, string[]>> headers)
+        {
+            Uri = uri;
+            HttpMethod = httpMethod;
+            Content = content ?? string.Empty;
+            Headers = headers.ToDictionary(
+                kv => kv.Key,
+                kv => (IReadOnlyCollection<string>) kv.Value.ToList());
+        }
+
+        public Uri Uri { get; }
+        public HttpMethod HttpMethod { get; }
+        public string Content { get; }
+        public IReadOnlyDictionary<string, IReadOnlyCollection<string>> Headers { get; }
     }
 }

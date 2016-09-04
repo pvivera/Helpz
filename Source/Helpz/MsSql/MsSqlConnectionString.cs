@@ -27,12 +27,16 @@ using Helpz.Core;
 
 namespace Helpz.MsSql
 {
-    public class ConnectionString : SingleValueObject<string>
+    public class MsSqlConnectionString : SingleValueObject<string>
     {
-        private static readonly Regex DatabaseReplace = new Regex(@"(?<key>Initial Catalog|Database)=[a-zA-Z0-9\-_]+", RegexOptions.Compiled);
-        private static readonly Regex DatabaseExtract = new Regex(@"(Initial Catalog|Database)=(?<database>[a-zA-Z0-9\-_]+)", RegexOptions.Compiled);
+        private static readonly Regex DatabaseReplace = new Regex(
+            @"(?<key>Initial Catalog|Database)=[a-zA-Z0-9\-_]+",
+            RegexOptions.Compiled);
+        private static readonly Regex DatabaseExtract = new Regex(
+            @"(Initial Catalog|Database)=(?<database>[a-zA-Z0-9\-_]+)",
+            RegexOptions.Compiled);
 
-        public ConnectionString(string value) : base(value)
+        public MsSqlConnectionString(string value) : base(value)
         {
             if (string.IsNullOrEmpty(value)) throw new ArgumentNullException(nameof(value));
 
@@ -47,9 +51,9 @@ namespace Helpz.MsSql
 
         public string Database { get; }
 
-        public ConnectionString NewConnectionString(string toDatabase)
+        public MsSqlConnectionString NewConnectionString(string toDatabase)
         {
-            return new ConnectionString(DatabaseReplace.Replace(Value, $"${{key}}={toDatabase}"));
+            return new MsSqlConnectionString(DatabaseReplace.Replace(Value, $"${{key}}={toDatabase}"));
         }
 
         public void Ping()
@@ -68,7 +72,7 @@ namespace Helpz.MsSql
 
         public void Execute(string sql)
         {
-            Console.WriteLine("Executing SQL: {0}", sql);
+            Console.WriteLine($"Executing SQL: {sql}");
 
             WithConnection(c =>
             {

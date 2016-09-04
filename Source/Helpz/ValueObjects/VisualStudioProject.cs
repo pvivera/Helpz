@@ -21,17 +21,41 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Data.SqlClient;
+using System.Collections.Generic;
+using Helpz.Core;
 
-namespace Helpz.MsSql
+namespace Helpz.ValueObjects
 {
-    public interface IMsSqlDatabase : IDisposable
+    public class VisualStudioProject : ValueObject
     {
-        MsSqlConnectionString ConnectionString { get; }
-        bool DropOnDispose { get; }
-        void Ping();
-        T WithConnection<T>(Func<SqlConnection, T> action);
-        void Execute(string sql);
-        void WithConnection(Action<SqlConnection> action);
+        public VisualStudioProject(
+            string directoryPath,
+            string filePath,
+            string name)
+        {
+            if (string.IsNullOrEmpty(directoryPath)) throw new ArgumentNullException(nameof(directoryPath));
+            if (string.IsNullOrEmpty(filePath)) throw new ArgumentNullException(nameof(filePath));
+            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+
+            DirectoryPath = directoryPath;
+            FilePath = filePath;
+            Name = name;
+        }
+
+        public string DirectoryPath { get; }
+        public string FilePath { get; }
+        public string Name { get; }
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return DirectoryPath;
+            yield return FilePath;
+            yield return Name;
+        }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

@@ -21,17 +21,30 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Data.SqlClient;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.NetworkInformation;
 
-namespace Helpz.MsSql
+namespace Helpz
 {
-    public interface IMsSqlDatabase : IDisposable
+    public static class TcpHelpz
     {
-        MsSqlConnectionString ConnectionString { get; }
-        bool DropOnDispose { get; }
-        void Ping();
-        T WithConnection<T>(Func<SqlConnection, T> action);
-        void Execute(string sql);
-        void WithConnection(Action<SqlConnection> action);
+        private static readonly Random Random = new Random();
+
+        public static int GetFreePort()
+        {
+            var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
+            var activeTcpListeners = ipGlobalProperties.GetActiveTcpListeners();
+            var ports = new HashSet<int>(activeTcpListeners.Select(p => p.Port));
+
+            while (true)
+            {
+                var port = Random.Next(10000, 50000);
+                if (!ports.Contains(port))
+                {
+                    return port;
+                }
+            }
+        }
     }
 }

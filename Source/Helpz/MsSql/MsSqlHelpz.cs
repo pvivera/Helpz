@@ -38,9 +38,9 @@ namespace Helpz.MsSql
             return new MsSqlDatabase(connectionString, dropOnDispose);
         }
 
-        public static ConnectionString CreateConnectionString(string label)
+        public static MsSqlConnectionString CreateConnectionString(string label)
         {
-            var databaseName = $"{label}_{DateTime.Now.ToString("yyyy-MM-dd-HH-mm")}_{Guid.NewGuid().ToString("N")}";
+            var databaseName = $"{label}_{DateTime.Now:yyyy-MM-dd-HH-mm}_{Guid.NewGuid():N}";
 
             var connectionstringParts = new List<string>
             {
@@ -62,7 +62,7 @@ namespace Helpz.MsSql
                 connectionstringParts.Add($"Password={environmentPassword}");
             }
 
-            return new ConnectionString(string.Join(";", connectionstringParts));
+            return new MsSqlConnectionString(string.Join(";", connectionstringParts));
         }
     }
 }

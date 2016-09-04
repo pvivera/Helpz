@@ -20,18 +20,27 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Data.SqlClient;
+using System.Linq;
+using FluentAssertions;
+using Helpz.VisualStudioProjects;
+using NUnit.Framework;
 
-namespace Helpz.MsSql
+namespace Helpz.Tests
 {
-    public interface IMsSqlDatabase : IDisposable
+    public class VisualStudioProjectTests
     {
-        MsSqlConnectionString ConnectionString { get; }
-        bool DropOnDispose { get; }
-        void Ping();
-        T WithConnection<T>(Func<SqlConnection, T> action);
-        void Execute(string sql);
-        void WithConnection(Action<SqlConnection> action);
+        [Test]
+        public void FindVisualStudioProjects()
+        {
+            // Act
+            var visualStudioProjects = VisualStudioProjectHelpz.FindVisualStudioProjects(
+                typeof (VisualStudioProjectTests).Assembly,
+                "README.md")
+                .ToList();
+
+            // Assert
+            visualStudioProjects.Should().Contain(p => p.Name == "Helpz");
+            visualStudioProjects.Should().Contain(p => p.Name == "Helpz.Tests");
+        }
     }
 }

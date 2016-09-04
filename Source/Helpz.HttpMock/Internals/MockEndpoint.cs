@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2015 Rasmus Mikkelsen
 // https://github.com/rasmus/Helpz
@@ -21,17 +21,27 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Data.SqlClient;
+using System.Net.Http;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Microsoft.Owin;
 
-namespace Helpz.MsSql
+namespace Helpz.HttpMock.Internals
 {
-    public interface IMsSqlDatabase : IDisposable
+    internal class MockEndpoint
     {
-        MsSqlConnectionString ConnectionString { get; }
-        bool DropOnDispose { get; }
-        void Ping();
-        T WithConnection<T>(Func<SqlConnection, T> action);
-        void Execute(string sql);
-        void WithConnection(Action<SqlConnection> action);
+        public MockEndpoint(
+            HttpMethod httpMethod,
+            string path,
+            Func<IOwinContext, Task> handler)
+        {
+            HttpMethod = httpMethod;
+            Handler = handler;
+            PathRegex = new Regex(path, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        }
+
+        public HttpMethod HttpMethod { get; }
+        public Regex PathRegex { get; }
+        public Func<IOwinContext, Task> Handler { get; }
     }
 }

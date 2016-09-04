@@ -1,6 +1,6 @@
 ﻿// The MIT License (MIT)
 //
-// Copyright (c) 2015 Rasmus Mikkelsen
+// Copyright (c) 2016 Rasmus Mikkelsen
 // https://github.com/rasmus/Helpz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -21,17 +21,40 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Data.SqlClient;
+using System.IO;
+using System.Linq;
+using FluentAssertions;
+using NUnit.Framework;
 
-namespace Helpz.MsSql
+namespace Helpz.SQLite.Tests
 {
-    public interface IMsSqlDatabase : IDisposable
+    public class SQLiteHelpzTests
     {
-        MsSqlConnectionString ConnectionString { get; }
-        bool DropOnDispose { get; }
-        void Ping();
-        T WithConnection<T>(Func<SqlConnection, T> action);
-        void Execute(string sql);
-        void WithConnection(Action<SqlConnection> action);
+        [Test]
+        public void CreatesValidConnectionString()
+        {
+            // Arrange
+            var sut = SQLiteHelpz.CreateLabeledConnectionString("testdb");
+
+            // Act
+            // Assert
+            sut.DatabaseFilePath.Should().EndWith("-testdb.sqlite");
+            Directory.Exists(Path.GetDirectoryName(sut.DatabaseFilePath))
+                .Should()
+                .BeTrue();
+        }
+
+        [Test]
+        public void CreatesWorkingDatabases()
+        {
+            // Arrange
+            var sut = SQLiteHelpz.CreateDatabase("test");
+
+            // Act
+            Action act = () => sut.Execute("CREATE TABLE [test] ([Id] [INTEGER] PRIMARY KEY ASC)");
+
+            // Assert
+            act.ShouldNotThrow<Exception>();
+        }
     }
 }

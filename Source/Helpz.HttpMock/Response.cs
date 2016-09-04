@@ -20,18 +20,42 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Data.SqlClient;
+using System.Net;
 
-namespace Helpz.MsSql
+namespace Helpz.HttpMock
 {
-    public interface IMsSqlDatabase : IDisposable
+    public class Response
     {
-        MsSqlConnectionString ConnectionString { get; }
-        bool DropOnDispose { get; }
-        void Ping();
-        T WithConnection<T>(Func<SqlConnection, T> action);
-        void Execute(string sql);
-        void WithConnection(Action<SqlConnection> action);
+        public static Response Create(
+            HttpStatusCode httpStatusCode)
+        {
+            return Create(httpStatusCode, null);
+        }
+
+        public static Response Create(
+            string content)
+        {
+            return Create(HttpStatusCode.OK, content);
+        }
+
+        public static Response Create(
+            HttpStatusCode httpStatusCode,
+            string content)
+        {
+            return new Response(
+                httpStatusCode,
+                content);
+        }
+
+        private Response(
+            HttpStatusCode httpStatusCode,
+            string content)
+        {
+            HttpStatusCode = httpStatusCode;
+            Content = content ?? string.Empty;
+        }
+
+        public HttpStatusCode HttpStatusCode { get; }
+        public string Content { get; }
     }
 }

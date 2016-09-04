@@ -21,17 +21,20 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Data.SqlClient;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.Owin;
 
-namespace Helpz.MsSql
+namespace Helpz.HttpMock
 {
-    public interface IMsSqlDatabase : IDisposable
+    public interface IHttpMock : IDisposable
     {
-        MsSqlConnectionString ConnectionString { get; }
-        bool DropOnDispose { get; }
-        void Ping();
-        T WithConnection<T>(Func<SqlConnection, T> action);
-        void Execute(string sql);
-        void WithConnection(Action<SqlConnection> action);
+        Uri Uri { get; }
+
+        void Mock(HttpMethod httpMethod, string path, Func<IOwinContext, Task> handler);
+        void Mock(HttpMethod httpMethod, string path, HttpStatusCode httpStatusCode);
+        void Mock(HttpMethod httpMethod, string path, string response);
+        void Mock(HttpMethod httpMethod, string path, Func<Request, Response> action);
     }
 }

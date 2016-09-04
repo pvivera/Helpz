@@ -1,6 +1,6 @@
 ﻿// The MIT License (MIT)
 //
-// Copyright (c) 2015 Rasmus Mikkelsen
+// Copyright (c) 2016 Rasmus Mikkelsen
 // https://github.com/rasmus/Helpz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -21,40 +21,26 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Data.SqlClient;
+using System.Data.SQLite;
+using System.IO;
 
-namespace Helpz.MsSql
+namespace Helpz.SQLite
 {
-    public class MsSqlDatabase : IMsSqlDatabase
+    public class SQLiteDatabase : ISQLiteDatabase
     {
-        public MsSqlDatabase(MsSqlConnectionString connectionString, bool dropOnDispose)
+        public SQLiteDatabase(SQLiteConnectionString connectionString, bool dropOnDispose = true)
         {
             ConnectionString = connectionString;
             DropOnDispose = dropOnDispose;
             ConnectionString.Ping();
         }
 
-        public MsSqlConnectionString ConnectionString { get; }
-        public bool DropOnDispose { get; }
-
         public void Dispose()
         {
-            if (DropOnDispose)
-            {
-                var masterConnectionString = ConnectionString.NewConnectionString("master");
-                masterConnectionString.Execute($"ALTER DATABASE [{ConnectionString.Database}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;");
-                masterConnectionString.Execute($"DROP DATABASE [{ConnectionString.Database}];");
-            }
-        }
+            if (!DropOnDispose || !File.Exists(ConnectionString.DatabaseFilePath)) return;
 
-        public void Ping()
-        {
-            ConnectionString.Ping();
-        }
-
-        public T WithConnection<T>(Func<SqlConnection, T> action)
-        {
-            return ConnectionString.WithConnection(action);
+            ConnectionString.Close();
+            File.Delete(ConnectionString.DatabaseFilePath);
         }
 
         public void Execute(string sql)
@@ -62,9 +48,23 @@ namespace Helpz.MsSql
             ConnectionString.Execute(sql);
         }
 
-        public void WithConnection(Action<SqlConnection> action)
+        public void Ping()
+        {
+            ConnectionString.Ping();
+        }
+
+        public void WithConnection(Action<SQLiteConnection> action)
         {
             ConnectionString.WithConnection(action);
         }
+
+        public T WithConnection<T>(Func<SQLiteConnection, T> action)
+        {
+            return ConnectionString.WithConnection(action);
+        }
+
+        public SQLiteConnectionString ConnectionString { get; }
+
+        public bool DropOnDispose { get; }
     }
 }

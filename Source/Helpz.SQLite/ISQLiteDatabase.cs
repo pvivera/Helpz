@@ -21,17 +21,17 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Data.SqlClient;
+using System.Data.SQLite;
 
-namespace Helpz.MsSql
+namespace Helpz.SQLite
 {
-    public interface IMsSqlDatabase : IDisposable
+    public interface ISQLiteDatabase : IDisposable
     {
-        MsSqlConnectionString ConnectionString { get; }
+        SQLiteConnectionString ConnectionString { get; }
         bool DropOnDispose { get; }
-        void Ping();
-        T WithConnection<T>(Func<SqlConnection, T> action);
         void Execute(string sql);
-        void WithConnection(Action<SqlConnection> action);
+        void Ping();
+        void WithConnection(Action<SQLiteConnection> action);
+        T WithConnection<T>(Func<SQLiteConnection, T> action);
     }
 }
