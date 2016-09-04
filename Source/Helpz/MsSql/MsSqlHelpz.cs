@@ -40,7 +40,7 @@ namespace Helpz.MsSql
 
         public static MsSqlConnectionString CreateConnectionString(string label)
         {
-            var databaseName = $"{label}_{DateTime.Now.ToString("yyyy-MM-dd-HH-mm")}_{Guid.NewGuid().ToString("N")}";
+            var databaseName = $"{label}_{DateTime.Now:yyyy-MM-dd-HH-mm}_{Guid.NewGuid():N}";
 
             var connectionstringParts = new List<string>
             {

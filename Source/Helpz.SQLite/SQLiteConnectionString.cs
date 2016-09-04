@@ -1,6 +1,6 @@
 ﻿// The MIT License (MIT)
 //
-// Copyright (c) 2015 Rasmus Mikkelsen
+// Copyright (c) 2016 Rasmus Mikkelsen
 // https://github.com/rasmus/Helpz
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -21,53 +21,55 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Data.SqlClient;
+using System.Data.SQLite;
+using System.IO;
 using System.Text.RegularExpressions;
 using Helpz.Core;
 
-namespace Helpz.MsSql
+namespace Helpz.SQLite
 {
-    public class MsSqlConnectionString : SingleValueObject<string>
+    public class SQLiteConnectionString : SingleValueObject<string>
     {
-        private static readonly Regex DatabaseReplace = new Regex(
-            @"(?<key>Initial Catalog|Database)=[a-zA-Z0-9\-_]+",
-            RegexOptions.Compiled);
         private static readonly Regex DatabaseExtract = new Regex(
-            @"(Initial Catalog|Database)=(?<database>[a-zA-Z0-9\-_]+)",
+            @"(\w+\.(sqlite|db))",
             RegexOptions.Compiled);
 
-        public MsSqlConnectionString(string value) : base(value)
+        private static readonly Regex DatabaseFilenameExtract = new Regex(
+            @"(?:=)(?<filename>.+\.sqlite|db)",
+            RegexOptions.Compiled);
+
+        private readonly SQLiteConnection _sqliteConnection;
+
+        public SQLiteConnectionString(string value)
+            : base(value)
         {
             if (string.IsNullOrEmpty(value)) throw new ArgumentNullException(nameof(value));
 
-            var match = DatabaseExtract.Match(value);
-            if (!match.Success)
-            {
+            var matchName = DatabaseExtract.Match(value);
+            if (!matchName.Success)
                 throw new ArgumentException($"Cannot find database name in '{value}'");
-            }
+            DatabaseName = matchName.Value;
 
-            Database = match.Groups["database"].Value;
+            var matchPath = DatabaseFilenameExtract.Match(Value);
+            if (!matchPath.Success)
+                throw new ArgumentException($"Cannot find database file path in '{Value}'");
+            DatabaseFilePath = matchPath.Groups["filename"].Value;
+
+            var directory = Path.GetDirectoryName(DatabaseFilePath);
+            if (!Directory.Exists(directory))
+                throw new ArgumentException($"File path {directory} does not exist");
+
+            _sqliteConnection = new SQLiteConnection(value);
+            _sqliteConnection.Open();
         }
 
-        public string Database { get; }
+        public string DatabaseFilePath { get; }
 
-        public MsSqlConnectionString NewConnectionString(string toDatabase)
-        {
-            return new MsSqlConnectionString(DatabaseReplace.Replace(Value, $"${{key}}={toDatabase}"));
-        }
+        public string DatabaseName { get; }
 
-        public void Ping()
+        internal void Close()
         {
-            Execute("SELECT 1");
-        }
-
-        public T WithConnection<T>(Func<SqlConnection, T> action)
-        {
-            using (var sqlConnection = new SqlConnection(Value))
-            {
-                sqlConnection.Open();
-                return action(sqlConnection);
-            }
+            _sqliteConnection.Close();
         }
 
         public void Execute(string sql)
@@ -76,20 +78,34 @@ namespace Helpz.MsSql
 
             WithConnection(c =>
             {
-                using (var sqlCommand = new SqlCommand(sql, c))
+                using (var sqlCommand = new SQLiteCommand(sql, c))
                 {
                     sqlCommand.ExecuteNonQuery();
                 }
             });
         }
 
-        public void WithConnection(Action<SqlConnection> action)
+        public void Ping()
+        {
+            Execute("SELECT 1");
+        }
+
+        public void WithConnection(Action<SQLiteConnection> action)
         {
             WithConnection(c =>
             {
                 action(c);
                 return 0;
             });
+        }
+
+        public T WithConnection<T>(Func<SQLiteConnection, T> action)
+        {
+            using (var sqliteConnection = new SQLiteConnection(Value))
+            {
+                sqliteConnection.Open();
+                return action(sqliteConnection);
+            }
         }
     }
 }
