@@ -100,6 +100,23 @@ Target "CreatePackageHelpzSQLite" (fun _ ->
             "Source/Helpz.SQLite/Helpz.SQLite.nuspec"
     )
 
+Target "CreatePackageHelpzPostgreSQL" (fun _ ->
+    let binDir = "Source/Helpz.PostgreSQL/bin/"
+    CopyFile binDir (binDir + buildMode + "/Helpz.PostgreSQL.dll")
+    NuGet (fun p ->
+        {p with
+            OutputPath = dirPackages
+            WorkingDir = "Source/Helpz.PostgreSQL"
+            Version = nugetVersion
+            ReleaseNotes = toLines releaseNotes.Notes
+            Dependencies = [
+                "Helpz", nugetVersionDep
+                "Npgsql",  GetPackageVersion "./packages/" "Npgsql"
+            ]            
+            Publish = false })
+            "Source/Helpz.PostgreSQL/Helpz.PostgreSQL.nuspec"
+    )
+
 Target "Default" DoNothing
 
 "Clean"
@@ -109,6 +126,7 @@ Target "Default" DoNothing
     ==> "CreatePackageHelpz"
     ==> "CreatePackageHelpzHttpMock"
     ==> "CreatePackageHelpzSQLite"
+    ==> "CreatePackageHelpzPostgreSQL"
     ==> "Default"
 
 RunTargetOrDefault "Default"

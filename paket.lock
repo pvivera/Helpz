@@ -9,10 +9,13 @@ NUGET
     Microsoft.Owin.Hosting (3.0.1)
       Microsoft.Owin (>= 3.0.1)
       Owin (>= 1.0)
+    Npgsql (3.2.2)
+      System.Threading.Tasks.Extensions (>= 4.3)
     NuGet.CommandLine (3.4.3)
     NUnit (2.6.4)
     Owin (1.0)
     System.Data.SQLite.Core (1.0.102)
+    System.Threading.Tasks.Extensions (4.3)
 
 GROUP Build
 FRAMEWORK: NET451
